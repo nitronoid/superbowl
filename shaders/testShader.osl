@@ -37,8 +37,8 @@ float eyezone (point pos, float fuzz, float gap, float thickness, float warp)
     // calculate the sum of the normalised x and y
     float sum = (pos[0] + pos[1]) / r;
     // calculate the period of the pulse train based on our sum
-    float period = gap * (sum - (sum-1) * (1-warp));
-    
+    float period = gap * sum *(1 - (1-1/sum) * (1-warp));
+    if(r > sum) period *=2;
     float elipses = 1 - smoothpulsetraineven(thickness, thickness + period, fuzz, period, r);
     return  clamp(elipses,0,1);
 }
