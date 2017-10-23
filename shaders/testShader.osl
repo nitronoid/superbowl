@@ -1,0 +1,55 @@
+
+// Returns x squared
+float sqr(float x)
+{
+    return x * x;
+}
+
+// Returns the sign of x
+int signum(float x)
+{
+    return (0.0 < x) - (x < 0.0);
+}
+
+// Combines two smooth steps to create a smooth bump, 0 -> 1 -> 0
+float smoothpulse (float e0, float e1, float e2, float e3, float x)
+{
+    return smoothstep(e0,e1,x) - smoothstep(e2,e3,x);
+}
+
+// Creates an infinite trail of smooth bumps
+float smoothpulsetrain (float e0, float e1, float e2, float e3, float period, float x)
+{
+    return smoothpulse(e0, e1, e2, e3, mod(x,period));
+}
+
+// Wrapper for smoothpulsetrain that assumes the smoothpulse is uniform
+float smoothpulsetraineven (float e0, float e1, float fuzz, float period, float x)
+{
+    return smoothpulsetrain(e0-fuzz, e0, e1, e1+fuzz, period, x);
+}
+
+float eyezone (point pos, float fuzz, float gap, float thickness, float warp)
+{
+    // calculate the current radius
+    float r = hypot(pos[0],pos[1]);
+    //printf("%f.2",r);
+    // calculate the sum of the normalised x and y
+    float sum = (pos[0] + pos[1]) / r;
+    // calculate the period of the pulse train based on our sum
+    float period = gap * (sum - (sum-1) * (1-warp));
+    
+    float elipses = 1 - smoothpulsetraineven(thickness, thickness + period, fuzz, period, r);
+    return  clamp(elipses,0,1);
+}
+
+shader testShader(
+    color _colU = 0,
+    color _colV = 0,
+    output color o_col = 0
+)
+{
+    point eyeTransform = P + point(-1,-0.25,0);
+    float blend = eyezone(eyeTransform, 0.05, 0.2, 0.1, 1);
+    o_col = mix(_colU, _colV, blend);
+}
