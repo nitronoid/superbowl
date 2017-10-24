@@ -11,6 +11,12 @@ int signum(float x)
     return (0.0 < x) - (x < 0.0);
 }
 
+// Linear interpolation at between x and y, at t
+float lerp(float x, float y, float t) 
+{
+  return (1 - t) * x + t * y;
+}
+
 // Combines two smooth steps to create a smooth bump, 0 -> 1 -> 0
 float smoothpulse (float e0, float e1, float e2, float e3, float x)
 {
@@ -29,7 +35,7 @@ float smoothpulsetraineven (float e0, float e1, float fuzz, float period, float 
     return smoothpulsetrain(e0-fuzz, e0, e1, e1+fuzz, period, x);
 }
 
-float eyezone (point pos, float fuzz, float gap, float thickness, float warp)
+float eyezone (point pos, float fuzz, float gap, float thickness, float warp, float exp)
 {
     // calculate the current radius
     float r = hypot(pos[0],pos[1]);
@@ -37,10 +43,10 @@ float eyezone (point pos, float fuzz, float gap, float thickness, float warp)
     // calculate the sum of the normalised x and y
     float sum = (pos[0] + pos[1]) / r;
     // calculate the period of the pulse train based on our sum
-    float period = gap * sum *(1 - (1-1/sum) * (1-warp));
-    if(r > sum) period *=2;
+    float period = gap * lerp(1, sum, warp);
+    //if(r > sum) period *=2;
     float elipses = 1 - smoothpulsetraineven(thickness, thickness + period, fuzz, period, r);
-    return  clamp(elipses,0,1);
+    return clamp(elipses,0,1);
 }
 
 shader testShader(
@@ -49,7 +55,7 @@ shader testShader(
     output color o_col = 0
 )
 {
-    point eyeTransform = P + point(-1,-0.25,0);
-    float blend = eyezone(eyeTransform, 0.05, 0.2, 0.1, 1);
+    point eyeTransform = P ;
+    float blend = eyezone(eyeTransform, 0.05, 0.2, 0.1, 1, 2);
     o_col = mix(_colU, _colV, blend);
 }
