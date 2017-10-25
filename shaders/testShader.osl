@@ -32,7 +32,7 @@ float smoothpulsetrain (float e0, float e1, float e2, float e3, float period, fl
 // Wrapper for smoothpulsetrain that assumes the smoothpulse is uniform
 float smoothpulsetraineven (float e0, float e1, float fuzz, float period, float x)
 {
-    return smoothpulsetrain(e0-fuzz, e0, e1, e1+fuzz, period, x);
+    return smoothpulsetrain(e0-fuzz, e0, e1, e1+fuzz, period,x);
 }
 
 float eyezone (point pos, float fuzz, float gap, float thickness, float warp, float exp)
@@ -43,9 +43,8 @@ float eyezone (point pos, float fuzz, float gap, float thickness, float warp, fl
     // calculate the sum of the normalised x and y
     float sum = (pos[0] + pos[1]) / r;
     // calculate the period of the pulse train based on our sum
-    float period = gap * lerp(1, sum, warp);
-    //if(r > sum) period *=2;
-    float elipses = 1 - smoothpulsetraineven(thickness, thickness + period, fuzz, period, r);
+    float period = gap * lerp(1, pow(sum,1.0/exp), warp);
+    float elipses = 1 - smoothpulsetraineven(thickness, thickness + period, fuzz, period, pow(r,1.0/exp));
     return clamp(elipses,0,1);
 }
 
@@ -56,6 +55,6 @@ shader testShader(
 )
 {
     point eyeTransform = P ;
-    float blend = eyezone(eyeTransform, 0.05, 0.2, 0.1, 1, 2);
+    float blend = eyezone(eyeTransform, 0.05, 0.2, 0.1, 1, 1.5);
     o_col = mix(_colU, _colV, blend);
 }

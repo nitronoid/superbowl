@@ -178,9 +178,9 @@ code ___main___
 	compref		$tmp11 ___310_Pring $const9 	%line{87} %argrw{"wrr"}
 	compref		$tmp12 ___310_Pring $const8 	%argrw{"wrr"}
 	functioncall	$const12 32 	%argrw{"r"}
-# /opt/pixar/RenderManProServer-21.5/lib/osl/include/stdosl.h:113
+# /opt/pixar/RenderManProServer-21.4/lib/osl/include/stdosl.h:113
 # /////////////////////////////////////////////////////////////////////////////
-	mul		$tmp13 $tmp11 $tmp11 	%filename{"/opt/pixar/RenderManProServer-21.5/lib/osl/include/stdosl.h"} %line{113} %argrw{"wrr"}
+	mul		$tmp13 $tmp11 $tmp11 	%filename{"/opt/pixar/RenderManProServer-21.4/lib/osl/include/stdosl.h"} %line{113} %argrw{"wrr"}
 	mul		$tmp14 $tmp12 $tmp12 	%argrw{"wrr"}
 	add		$tmp15 $tmp13 $tmp14 	%argrw{"wrr"}
 	sqrt		$tmp10 $tmp15 	%argrw{"wr"}
@@ -209,9 +209,9 @@ code ___main___
 # testWoodShader.osl:27
 #     return smoothpulse (e0, e1, e2, e3, mod(x,period));
 	functioncall	$const22 49 	%line{27} %argrw{"r"}
-# /opt/pixar/RenderManProServer-21.5/lib/osl/include/stdosl.h:135
+# /opt/pixar/RenderManProServer-21.4/lib/osl/include/stdosl.h:135
 # PERCOMP1 (log2)
-	div		$tmp27 ___310_r $const10 	%filename{"/opt/pixar/RenderManProServer-21.5/lib/osl/include/stdosl.h"} %line{135} %argrw{"wrr"}
+	div		$tmp27 ___310_r $const10 	%filename{"/opt/pixar/RenderManProServer-21.4/lib/osl/include/stdosl.h"} %line{135} %argrw{"wrr"}
 	floor		$tmp26 $tmp27 	%argrw{"wr"}
 	mul		$tmp28 $const10 $tmp26 	%argrw{"wrr"}
 	sub		$tmp25 ___310_r $tmp28 	%argrw{"wrr"}
@@ -262,9 +262,9 @@ code ___main___
 #             g = pow(clamp(0.8 - (g),0,1),2);
 	sub		$tmp40 $const28 ___313_g 	%line{106} %argrw{"wrr"}
 	functioncall	$const29 74 	%argrw{"r"}
-# /opt/pixar/RenderManProServer-21.5/lib/osl/include/stdosl.h:144
+# /opt/pixar/RenderManProServer-21.4/lib/osl/include/stdosl.h:144
 # #define M_2PI      6.2831853071795865        /* 2*pi */
-	min		$tmp41 $tmp40 $const10 	%filename{"/opt/pixar/RenderManProServer-21.5/lib/osl/include/stdosl.h"} %line{144} %argrw{"wrr"}
+	min		$tmp41 $tmp40 $const10 	%filename{"/opt/pixar/RenderManProServer-21.4/lib/osl/include/stdosl.h"} %line{144} %argrw{"wrr"}
 	max		$tmp39 $tmp41 $const13 	%argrw{"wrr"}
 # testWoodShader.osl:106
 #             g = pow(clamp(0.8 - (g),0,1),2);
