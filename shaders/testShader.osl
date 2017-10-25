@@ -45,7 +45,7 @@ float eyezone (point pos, float fuzz, float gap, float thickness, float warp, fl
     // calculate the period of the pulse train based on our sum and exp
     float period = gap * lerp(1, pow(sum,recipExp), warp);
     float elipses = 1 - smoothpulsetraineven(thickness, thickness + period, fuzz, period, pow(r,recipExp));
-    float mask = 1 - smoothstep(1-fuzz,1+fuzz,hypot(pos[0]-(recipExp+gap),pos[1]-(recipExp+gap)));
+    float mask = 1 - smoothstep(1,1,hypot(pos[0]-(0.7),pos[1]-(0.7)));
     return mask * clamp(elipses,0,1);
 }
 
@@ -55,7 +55,7 @@ shader testShader(
     output color o_col = 0
 )
 {
-    point eyeTransform = P / 1.65 + point(-0.15,-0.1,0);
-    float blend = eyezone(eyeTransform, 0.01, 0.2, 0.05, 1, 2);
+    point eyeTransform = P /1.65 + point(-0.15,-0.1,0);
+    float blend = eyezone(eyeTransform, 0.01, 0.2, 0.03, 1, 3);
     o_col = mix(_colU, _colV, blend);
 }

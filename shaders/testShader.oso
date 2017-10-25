@@ -2,32 +2,32 @@ OpenShadingLanguage 1.00
 # Compiled by oslc 1.7.4.pixar38bde12
 # options: 
 shader testShader
-param	color	_colU	0 0 0		%read{57,57} %write{2147483647,-1}
-param	color	_colV	0 0 0		%read{57,57} %write{2147483647,-1}
-oparam	color	o_col	0 0 0		%read{2147483647,-1} %write{57,57}
+param	color	_colU	0 0 0		%read{53,53} %write{2147483647,-1}
+param	color	_colV	0 0 0		%read{53,53} %write{2147483647,-1}
+oparam	color	o_col	0 0 0		%read{2147483647,-1} %write{53,53}
 global	point	P	%read{0,0} %write{2147483647,-1}
-local	float	___311_recipExp	%read{15,44} %write{3,3}
+local	float	___311_recipExp	%read{15,23} %write{3,3}
 local	float	___311_r	%read{14,23} %write{10,10}
 local	float	___311_sum	%read{15,15} %write{14,14}
 local	float	___311_period	%read{22,31} %write{21,21}
-local	float	___311_elipses	%read{54,54} %write{37,37}
-local	float	___311_mask	%read{56,56} %write{52,52}
-local	point	eyeTransform	%read{4,43} %write{1,1}
-local	float	blend	%read{57,57} %write{56,56}
+local	float	___311_elipses	%read{50,50} %write{37,37}
+local	float	___311_mask	%read{52,52} %write{48,48}
+local	point	eyeTransform	%read{4,40} %write{1,1}
+local	float	blend	%read{53,53} %write{52,52}
 const	float	$const1	1.65		%read{0,0} %write{2147483647,-1}
 temp	point	$tmp1	%read{1,1} %write{0,0}
 const	point	$const2	-0.15000001 -0.1 0		%read{1,1} %write{2147483647,-1}
-const	float	$const3	0.0099999998		%read{25,39} %write{2147483647,-1}
-const	float	$const4	0.2		%read{21,44} %write{2147483647,-1}
-const	float	$const5	0.050000001		%read{22,34} %write{2147483647,-1}
-const	int	$const6	1		%read{5,43} %write{2147483647,-1}
-const	float	$const7	1		%read{3,54} %write{2147483647,-1}
-const	float	$const9	2		%read{3,3} %write{2147483647,-1}
+const	float	$const3	0.0099999998		%read{25,26} %write{2147483647,-1}
+const	float	$const4	0.2		%read{21,21} %write{2147483647,-1}
+const	float	$const5	0.029999999		%read{22,34} %write{2147483647,-1}
+const	int	$const6	1		%read{5,40} %write{2147483647,-1}
+const	float	$const7	1		%read{3,50} %write{2147483647,-1}
+const	float	$const9	3		%read{3,3} %write{2147483647,-1}
 const	string	$const10	"eyezone"		%read{2,2} %write{2147483647,-1}
-const	int	$const11	0		%read{4,40} %write{2147483647,-1}
+const	int	$const11	0		%read{4,38} %write{2147483647,-1}
 temp	float	$tmp3	%read{7,7} %write{4,4}
 temp	float	$tmp4	%read{8,8} %write{5,5}
-const	string	$const12	"hypot"		%read{6,46} %write{2147483647,-1}
+const	string	$const12	"hypot"		%read{6,42} %write{2147483647,-1}
 temp	float	$tmp5	%read{9,9} %write{7,7}
 temp	float	$tmp6	%read{9,9} %write{8,8}
 temp	float	$tmp7	%read{10,10} %write{9,9}
@@ -55,31 +55,28 @@ temp	float	$tmp24	%read{32,32} %write{31,31}
 const	string	$const17	"smoothpulse"		%read{33,33} %write{2147483647,-1}
 temp	float	$tmp25	%read{36,36} %write{34,34}
 temp	float	$tmp26	%read{36,36} %write{35,35}
-temp	float	$tmp27	%read{52,52} %write{51,51}
-temp	float	$tmp28	%read{51,51} %write{38,38}
-temp	float	$tmp29	%read{51,51} %write{39,39}
-temp	float	$tmp30	%read{51,51} %write{50,50}
-temp	float	$tmp31	%read{42,42} %write{40,40}
-temp	float	$tmp32	%read{42,42} %write{41,41}
-temp	float	$tmp33	%read{47,47} %write{42,42}
-temp	float	$tmp34	%read{45,45} %write{43,43}
-temp	float	$tmp35	%read{45,45} %write{44,44}
-temp	float	$tmp36	%read{48,48} %write{45,45}
-temp	float	$tmp37	%read{49,49} %write{47,47}
-temp	float	$tmp38	%read{49,49} %write{48,48}
-temp	float	$tmp39	%read{50,50} %write{49,49}
-temp	float	$tmp40	%read{56,56} %write{55,55}
-const	float	$const18	0		%read{55,55} %write{2147483647,-1}
-const	string	$const19	"clamp"		%read{53,53} %write{2147483647,-1}
-temp	float	$tmp41	%read{55,55} %write{54,54}
+temp	float	$tmp27	%read{48,48} %write{47,47}
+temp	float	$tmp28	%read{47,47} %write{46,46}
+temp	float	$tmp29	%read{39,39} %write{38,38}
+const	float	$const18	0.69999999		%read{39,41} %write{2147483647,-1}
+temp	float	$tmp30	%read{43,43} %write{39,39}
+temp	float	$tmp31	%read{41,41} %write{40,40}
+temp	float	$tmp32	%read{44,44} %write{41,41}
+temp	float	$tmp33	%read{45,45} %write{43,43}
+temp	float	$tmp34	%read{45,45} %write{44,44}
+temp	float	$tmp35	%read{46,46} %write{45,45}
+temp	float	$tmp36	%read{52,52} %write{51,51}
+const	float	$const19	0		%read{51,51} %write{2147483647,-1}
+const	string	$const20	"clamp"		%read{49,49} %write{2147483647,-1}
+temp	float	$tmp37	%read{51,51} %write{50,50}
 code ___main___
 # testShader.osl:58
-#     point eyeTransform = P / 1.65 + point(-0.15,-0.1,0);
+#     point eyeTransform = P /1.65 + point(-0.15,-0.1,0);
 	div		$tmp1 P $const1 	%filename{"testShader.osl"} %line{58} %argrw{"wrr"}
 	add		eyeTransform $tmp1 $const2 	%argrw{"wrr"}
 # testShader.osl:59
-#     float blend = eyezone(eyeTransform, 0.01, 0.2, 0.05, 1, 2);
-	functioncall	$const10 57 	%line{59} %argrw{"r"}
+#     float blend = eyezone(eyeTransform, 0.01, 0.2, 0.03, 1, 3);
+	functioncall	$const10 53 	%line{59} %argrw{"r"}
 # testShader.osl:40
 #     float recipExp = 1.0/exp;
 	div		___311_recipExp $const7 $const9 	%line{40} %argrw{"wrr"}
@@ -144,36 +141,32 @@ code ___main___
 #     float elipses = 1 - smoothpulsetraineven(thickness, thickness + period, fuzz, period, pow(r,recipExp));
 	sub		___311_elipses $const7 $tmp16 	%line{47} %argrw{"wrr"}
 # testShader.osl:48
-#     float mask = 1 - smoothstep(1-fuzz,1+fuzz,hypot(pos[0]-(recipExp+gap),pos[1]-(recipExp+gap)));
-	sub		$tmp28 $const7 $const3 	%line{48} %argrw{"wrr"}
-	add		$tmp29 $const7 $const3 	%argrw{"wrr"}
-	compref		$tmp31 eyeTransform $const11 	%argrw{"wrr"}
-	add		$tmp32 ___311_recipExp $const4 	%argrw{"wrr"}
-	sub		$tmp33 $tmp31 $tmp32 	%argrw{"wrr"}
-	compref		$tmp34 eyeTransform $const6 	%argrw{"wrr"}
-	add		$tmp35 ___311_recipExp $const4 	%argrw{"wrr"}
-	sub		$tmp36 $tmp34 $tmp35 	%argrw{"wrr"}
-	functioncall	$const12 51 	%argrw{"r"}
+#     float mask = 1 - smoothstep(1,1,hypot(pos[0]-(0.7),pos[1]-(0.7)));
+	compref		$tmp29 eyeTransform $const11 	%line{48} %argrw{"wrr"}
+	sub		$tmp30 $tmp29 $const18 	%argrw{"wrr"}
+	compref		$tmp31 eyeTransform $const6 	%argrw{"wrr"}
+	sub		$tmp32 $tmp31 $const18 	%argrw{"wrr"}
+	functioncall	$const12 47 	%argrw{"r"}
 # /opt/pixar/RenderManProServer-21.4/lib/osl/include/stdosl.h:113
 #     vector name (vector x, vector y) BUILTIN;   \
-	mul		$tmp37 $tmp33 $tmp33 	%filename{"/opt/pixar/RenderManProServer-21.4/lib/osl/include/stdosl.h"} %line{113} %argrw{"wrr"}
-	mul		$tmp38 $tmp36 $tmp36 	%argrw{"wrr"}
-	add		$tmp39 $tmp37 $tmp38 	%argrw{"wrr"}
-	sqrt		$tmp30 $tmp39 	%argrw{"wr"}
+	mul		$tmp33 $tmp30 $tmp30 	%filename{"/opt/pixar/RenderManProServer-21.4/lib/osl/include/stdosl.h"} %line{113} %argrw{"wrr"}
+	mul		$tmp34 $tmp32 $tmp32 	%argrw{"wrr"}
+	add		$tmp35 $tmp33 $tmp34 	%argrw{"wrr"}
+	sqrt		$tmp28 $tmp35 	%argrw{"wr"}
 # testShader.osl:48
-#     float mask = 1 - smoothstep(1-fuzz,1+fuzz,hypot(pos[0]-(recipExp+gap),pos[1]-(recipExp+gap)));
-	smoothstep	$tmp27 $tmp28 $tmp29 $tmp30 	%filename{"testShader.osl"} %line{48} %argrw{"wrrr"}
+#     float mask = 1 - smoothstep(1,1,hypot(pos[0]-(0.7),pos[1]-(0.7)));
+	smoothstep	$tmp27 $const7 $const7 $tmp28 	%filename{"testShader.osl"} %line{48} %argrw{"wrrr"}
 	sub		___311_mask $const7 $tmp27 	%argrw{"wrr"}
 # testShader.osl:49
 #     return mask * clamp(elipses,0,1);
-	functioncall	$const19 56 	%line{49} %argrw{"r"}
+	functioncall	$const20 52 	%line{49} %argrw{"r"}
 # /opt/pixar/RenderManProServer-21.4/lib/osl/include/stdosl.h:144
 # PERCOMP2 (atan2)
-	min		$tmp41 ___311_elipses $const7 	%filename{"/opt/pixar/RenderManProServer-21.4/lib/osl/include/stdosl.h"} %line{144} %argrw{"wrr"}
-	max		$tmp40 $tmp41 $const18 	%argrw{"wrr"}
+	min		$tmp37 ___311_elipses $const7 	%filename{"/opt/pixar/RenderManProServer-21.4/lib/osl/include/stdosl.h"} %line{144} %argrw{"wrr"}
+	max		$tmp36 $tmp37 $const19 	%argrw{"wrr"}
 # testShader.osl:49
 #     return mask * clamp(elipses,0,1);
-	mul		blend ___311_mask $tmp40 	%filename{"testShader.osl"} %line{49} %argrw{"wrr"}
+	mul		blend ___311_mask $tmp36 	%filename{"testShader.osl"} %line{49} %argrw{"wrr"}
 # testShader.osl:60
 #     o_col = mix(_colU, _colV, blend);
 	mix		o_col _colU _colV blend 	%line{60} %argrw{"wrrr"}
