@@ -5,15 +5,13 @@ Display "scene" "it" "rgba"
 Projection "perspective" "fov" [50]
 Format 640 480 1
 Hider "raytrace" "int maxsamples" [512]
-Integrator "PxrPathTracer" "spt" "int maxPathLength" [2]
+Integrator "PxrPathTracer" "pt" "int maxPathLength" [2]
 PixelVariance 0.2
 Translate 0 0 10
 WorldBegin 
 	AttributeBegin 
-		TransformBegin 
-			Rotate 80 0 0 1
-			Light "PxrDomeLight" "domeLight" "string lightColorMap" ["room_hdri.tx"]
-		TransformEnd 
+		Rotate 80 0 0 1
+		Light "PxrDomeLight" "domeLight" "string lightColorMap" ["room_hdri.tx"]
 	AttributeEnd 
 	AttributeBegin 
 		Pattern "oak" "oakShader" 
