@@ -49,13 +49,12 @@ float eyezone (point pos, float fuzz, float gap, float thickness, float warp, fl
     return mask * clamp(elipses,0,1);
 }
 
-shader testShader(
-    color _colU = 0,
-    color _colV = 0,
-    output color o_col = 0
+shader woodOwl(
+    output float resultF   = 0,
+    output color resultRGB = 0
 )
 {
     point eyeTransform = P /1.65 + point(-0.15,-0.1,0);
-    float blend = eyezone(eyeTransform, 0.01, 0.2, 0.03, 1, 3);
-    o_col = mix(_colU, _colV, blend);
+    resultF = eyezone(eyeTransform, 0.02, 0.2, 0.03, 1, 3);
+    resultRGB = mix(color(0,0,0), color(1,1,1), resultF);
 }

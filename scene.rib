@@ -1,42 +1,30 @@
-
-Option "searchpath" "archive" "."
-Option "searchpath" "shader" "./shaders"
-Option "searchpath" "texture" "./textures"
-
-Display "owl" "it" "rgba"
+##RenderMan RIB
+version 3.04
+Option "searchpath" "archive" ["./models"] "texture" ["./textures"] "shader" ["./shaders"]
+Display "scene" "it" "rgba" 
 Projection "perspective" "fov" [50]
 Format 640 480 1
-
-Hider "raytrace" "int maxsamples" 512 
-Integrator "PxrPathTracer" "spt" "int maxPathLength" 2 
+Hider "raytrace" "int maxsamples" [512]
+Integrator "PxrPathTracer" "spt" "int maxPathLength" [2]
 PixelVariance 0.2
-
 Translate 0 0 10
-
-WorldBegin
-
-    # Light sources
-    AttributeBegin
-        TransformBegin
-            Rotate 80 0 0 1
-            Light "PxrDomeLight" "domeLight" "string lightColorMap" ["room_hdri.tx"]
-        TransformEnd
-    AttributeEnd
-    AttributeBegin
-        Pattern "testShader" "test"
-            "color _colU" [0.1 0.8 0.1]
-            "color _colV" [0.8 0.1 0.1]
-        #Attribute "displacementbound" "float sphere" [1]
-        #Displace "PxrDisplace" "dispS" 
-         #   "float dispAmount" [0.01] 
-         #   "reference float dispScalar" ["testOak:Displacement"]
-        Bxdf "PxrDisney" "testShad"
-            "reference color baseColor" ["test:o_col"]
-        ReadArchive "owl.rib" 
-    AttributeEnd
-    AttributeBegin
-        Bxdf "PxrDisney" "testShad" "color baseColor" [0.0 0.7 0.6]
-        Patch "bilinear" "P" [ 10 -3.15 10 10 -3.15 -10 -10 -3.15 10 -10 -3.15 -10 ] 
-    AttributeEnd
-
-WorldEnd
+WorldBegin 
+	AttributeBegin 
+		TransformBegin 
+			Rotate 80 0 0 1
+			Light "PxrDomeLight" "domeLight" "string lightColorMap" ["room_hdri.tx"]
+		TransformEnd 
+	AttributeEnd 
+	AttributeBegin 
+		Pattern "oak" "oakShader" 
+		Pattern "woodOwl" "owl" 
+		Attribute "displacementbound" "float sphere" [0.2]
+		Displace "PxrDisplace" "displace" "reference float dispScalar" ["owl:resultF"] "float dispAmount" [-0.1]
+		Bxdf "PxrDisney" "testShad" "reference color baseColor" ["oakShader:Color"]
+		ReadArchive "owl.rib" 
+	AttributeEnd 
+	AttributeBegin 
+		Bxdf "PxrDisney" "testShad" "color baseColor" [0 0.7 0.6]
+		Patch "bilinear" "P" [10 -3.15 10 10 -3.15 -10 -10 -3.15 10 -10 -3.15 -10]
+	AttributeEnd 
+WorldEnd 

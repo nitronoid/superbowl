@@ -1,7 +1,7 @@
 
 RUN_DIR="${PWD}"
 SHADERS_DIR='shaders/'
-SCENE_FILE='scene.rib'
+SCENE_NAME='scene'
 
 cd $SHADERS_DIR
 for f in *.osl; do
@@ -9,4 +9,5 @@ for f in *.osl; do
 done
 cd $RUN_DIR
 
-render "$SCENE_FILE"
+python "$SCENE_NAME".py
+render "$SCENE_NAME".rib
