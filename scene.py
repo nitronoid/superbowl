@@ -5,44 +5,45 @@ import sys
 import os
 
 
-def main():
+''' 
+Functions have been used to group together sections of the rib file.
+This was done mostly to make the layout clearer, rather than for reusing code.
+The most commonly changed settings have been added as params to the functions.
+'''
 
-    filename = 'scene'
 
-    # Instance of Renderman Interface
-    ri = prman.Ri()
-
-    # Make sure the output RIB file is indented for clarity
-    ri.Option("rib", {"string asciistyle": "indented"})
-
-    # Begin the RIB file
-    ri.Begin(filename+'.rib')
+def output_options(ri, filename, res):
 
     # Include search directories
     ri.Option('searchpath', {'archive': './models', 'shader': './shaders', 'texture': './textures'})
     # Set the display method, I use it to save only when necessary and avoid multiple windows
     ri.Display(filename, 'it', 'rgba')
-    # Use perspective projection and set the field of view
-    ri.Projection(ri.PERSPECTIVE, {'fov': [50]})
     # Output resolution
-    ri.Format(640, 480, 1)
+    ri.Format(res[0], res[1], res[2])
 
-    # Think of these as camera/render settings
-    ri.Hider('raytrace', {'int maxsamples': [512]})
-    ri.Integrator('PxrPathTracer', 'pt', {'int maxPathLength': [2]})
+
+def camera_settings(ri, fov, maxsamples, pathlen, pixelvariance, pos):
+
+    # Use perspective projection and set the field of view
+    ri.Projection(ri.PERSPECTIVE, {'fov': [fov]})
+    ri.Hider('raytrace', {'int maxsamples': [maxsamples]})
+    ri.Integrator('PxrPathTracer', 'pt', {'int maxPathLength': [pathlen]})
     # Lower this for faster renders, comment the line for best quality
-    ri.PixelVariance([0.2])
+    ri.PixelVariance([pixelvariance])
     # Camera position
-    ri.Translate(0, 0, 10)
+    ri.Translate(pos[0], pos[1], pos[2])
 
-    # Start of the scene
-    ri.WorldBegin()
+
+def lighting(ri):
 
     # Create and position our environment dome light
     ri.AttributeBegin()
     ri.Rotate(80, 0, 0, 1)
     ri.Light('PxrDomeLight', 'domeLight', {'string lightColorMap': ['room_hdri.tx']})
     ri.AttributeEnd()
+
+
+def geometry(ri):
 
     # The owl
     ri.AttributeBegin()
@@ -64,6 +65,33 @@ def main():
     ri.Bxdf('PxrDisney', 'testShad', {'color baseColor': [0.0, 0.7, 0.6]})
     ri.Patch('bilinear', {'P': [10, -3.15, 10, 10, -3.15, -10, -10, -3.15, 10, -10, -3.15, -10]})
     ri.AttributeEnd()
+
+
+def main():
+
+    filename = 'scene'
+
+    # Instance of Renderman Interface
+    ri = prman.Ri()
+
+    # Make sure the output RIB file is indented for clarity
+    ri.Option("rib", {"string asciistyle": "indented"})
+
+    # Begin the RIB file
+    ri.Begin(filename+'.rib')
+
+    # Set up image writing
+    output_options(ri, filename=filename, res=(640, 480, 1))
+    # Camera settings
+    camera_settings(ri, fov=50, maxsamples=512, pathlen=2, pixelvariance=0.2, pos=(0, 0, 10))
+
+    # Start of the scene
+    ri.WorldBegin()
+
+    # Scene lighting
+    lighting(ri)
+    # All scene geometry
+    geometry(ri)
 
     # End of scene and RIB file
     ri.WorldEnd()

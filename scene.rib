@@ -2,8 +2,8 @@
 version 3.04
 Option "searchpath" "archive" ["./models"] "texture" ["./textures"] "shader" ["./shaders"]
 Display "scene" "it" "rgba" 
-Projection "perspective" "fov" [50]
 Format 640 480 1
+Projection "perspective" "fov" [50]
 Hider "raytrace" "int maxsamples" [512]
 Integrator "PxrPathTracer" "pt" "int maxPathLength" [2]
 PixelVariance 0.2
