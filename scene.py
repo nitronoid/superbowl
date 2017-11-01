@@ -67,7 +67,14 @@ def geometry(ri):
     ri.AttributeBegin()
     # Instantiate some patterns from compiled shaders
     ri.Pattern('oak', 'oakShader')
-    ri.Pattern('woodOwl', 'owl')
+    ri.Pattern('woodOwl', 'owl', {'float scale': [1.65], 
+                                  'point translate': [-0.15, -0.1, 0],
+                                  'float warp': [1],
+                                  'float expo': [3],
+                                  'float thickness': [0.03],
+                                  'float gap': [0.2],
+                                  'float fuzz': [0.02]
+                                  })
     # Apply displacement to the owl within 0.2 radius, lower this for faster renders
     ri.Attribute('displacementbound', {'float sphere': [0.2]})
     # Use the displace node with our pattern variables plugged in
