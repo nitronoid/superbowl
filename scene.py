@@ -34,12 +34,30 @@ def camera_settings(ri, fov, maxsamples, pathlen, pixelvariance, pos):
     ri.Translate(pos[0], pos[1], pos[2])
 
 
-def lighting(ri):
+def lighting(ri, env_strength, tri_strength):
 
+    # Basic 3 point lighting
+    ri.AttributeBegin()
+    ri.Rotate(-35, 0, 1, 0)
+    ri.Light('PxrDistantLight', 'keyLight', {'intensity': [0.8 * tri_strength],
+                                             'float exposure': [-1],
+                                             'float angleExtent': [100]
+                                             })
+    ri.Rotate(180, 0, 1, 0)
+    ri.Light('PxrDistantLight', 'rimLight', {'intensity': [0.4 * tri_strength],
+                                             'float exposure': [-1],
+                                             'float angleExtent': [100]
+                                             })
+    ri.Rotate(-95, 0, 1, 0)
+    ri.Light('PxrDistantLight', 'fillLight', {'intensity': [0.05 * tri_strength],
+                                              'float exposure': [-1],
+                                              'float angleExtent': [100]
+                                              })
+    ri.AttributeEnd()
     # Create and position our environment dome light
     ri.AttributeBegin()
     ri.Rotate(80, 0, 0, 1)
-    ri.Light('PxrDomeLight', 'domeLight', {'string lightColorMap': ['room_hdri.tx']})
+    ri.Light('PxrDomeLight', 'domeLight', {'intensity': [0.5 * env_strength], 'string lightColorMap': ['room_hdri.tx']})
     ri.AttributeEnd()
 
 
@@ -89,7 +107,7 @@ def main():
     ri.WorldBegin()
 
     # Scene lighting
-    lighting(ri)
+    lighting(ri, 1, 1)
     # All scene geometry
     geometry(ri)
 
@@ -99,5 +117,7 @@ def main():
 
     return os.EX_OK
 
+
 if __name__ == "__main__":
+
     sys.exit(main())

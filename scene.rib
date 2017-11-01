@@ -10,8 +10,16 @@ PixelVariance 0.2
 Translate 0 0 10
 WorldBegin 
 	AttributeBegin 
+		Rotate -35 0 1 0
+		Light "PxrDistantLight" "keyLight" "intensity" [0.8] "float exposure" [-1] "float angleExtent" [100]
+		Rotate 180 0 1 0
+		Light "PxrDistantLight" "rimLight" "intensity" [0.4] "float exposure" [-1] "float angleExtent" [100]
+		Rotate -95 0 1 0
+		Light "PxrDistantLight" "fillLight" "intensity" [0.05] "float exposure" [-1] "float angleExtent" [100]
+	AttributeEnd 
+	AttributeBegin 
 		Rotate 80 0 0 1
-		Light "PxrDomeLight" "domeLight" "string lightColorMap" ["room_hdri.tx"]
+		Light "PxrDomeLight" "domeLight" "intensity" [0.5] "string lightColorMap" ["room_hdri.tx"]
 	AttributeEnd 
 	AttributeBegin 
 		Pattern "oak" "oakShader" 
