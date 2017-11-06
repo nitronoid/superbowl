@@ -57,7 +57,7 @@ def lighting(ri, env_strength, tri_strength):
     # Create and position our environment dome light
     ri.AttributeBegin()
     ri.Rotate(80, 0, 0, 1)
-    ri.Light('PxrDomeLight', 'domeLight', {'intensity': [0.5 * env_strength], 'string lightColorMap': ['room_hdri.tx']})
+    ri.Light('PxrDomeLight', 'domeLight', {'intensity': [env_strength], 'string lightColorMap': ['room_hdri.tx']})
     ri.AttributeEnd()
 
 
@@ -67,6 +67,7 @@ def geometry(ri):
     ri.AttributeBegin()
     # Instantiate some patterns from compiled shaders
     ri.Pattern('oak', 'oakShader')
+    ri.Pattern('oiledWood', 'woodShader')
     ri.Pattern('woodOwl', 'owl', {'float scale': [1.65], 
                                   'point translate': [-0.15, -0.1, 0],
                                   'float warp': [1],
@@ -80,7 +81,7 @@ def geometry(ri):
     # Use the displace node with our pattern variables plugged in
     ri.Displace('PxrDisplace', 'displace', {'float dispAmount': [-0.1], 'reference float dispScalar': ['owl:resultF']})
     # Use the PxrDisney for main qualities such as diffuse and spec
-    ri.Bxdf('PxrDisney', 'testShad', {'reference color baseColor': ['oakShader:Color']})
+    ri.Bxdf('PxrDisney', 'testShad', {'reference color baseColor': ['woodShader:resultRGB']})
     # Read in the model
     ri.ReadArchive('owl.rib')
     ri.AttributeEnd()
@@ -114,7 +115,7 @@ def main():
     ri.WorldBegin()
 
     # Scene lighting
-    lighting(ri, 1, 1)
+    lighting(ri, 0.5, 1)
     # All scene geometry
     geometry(ri)
 

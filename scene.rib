@@ -23,10 +23,11 @@ WorldBegin
 	AttributeEnd 
 	AttributeBegin 
 		Pattern "oak" "oakShader" 
+		Pattern "oiledWood" "woodShader" 
 		Pattern "woodOwl" "owl" "float expo" [3] "float thickness" [0.03] "float gap" [0.2] "float warp" [1] "float scale" [1.65] "float fuzz" [0.02] "point translate" [-0.15 -0.1 0]
 		Attribute "displacementbound" "float sphere" [0.2]
 		Displace "PxrDisplace" "displace" "reference float dispScalar" ["owl:resultF"] "float dispAmount" [-0.1]
-		Bxdf "PxrDisney" "testShad" "reference color baseColor" ["oakShader:Color"]
+		Bxdf "PxrDisney" "testShad" "reference color baseColor" ["woodShader:resultRGB"]
 		ReadArchive "owl.rib" 
 	AttributeEnd 
 	AttributeBegin 
