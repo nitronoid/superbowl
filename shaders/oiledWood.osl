@@ -4,17 +4,18 @@ shader oiledWood(
 )
 {
 
-    // Transform the point to shader space so it sticks to the object
-    point shaderP = transform("shader", P);
+    // Transform the point to object space so it sticks to the object
+    point shaderP = transform("object", P);
     float freq = 1;
     resultF=0;
-    for(int i = 0; i < 2; ++i)
+    for(int i = 0; i < 12; ++i)
 	{
-        resultF += abs((float)noise("perlin",P*freq))/freq;
+        resultF += abs((float)noise("perlin",shaderP*freq))/freq;
         freq*=2.1;
 	}
     // Outputs
-   // resultF = clamp(resultF, 0.0, 1.0);
-   resultF=smoothstep(0.8,0.91,resultF);
+    float slice = 0.8;
+    float fuzz = 0.1;
+    resultF = smoothstep(slice, slice + fuzz, resultF);
     resultRGB = mix(color(0,0,0), color(1,1,1), resultF);
 }

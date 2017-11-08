@@ -65,6 +65,7 @@ def geometry(ri):
 
     # The owl
     ri.AttributeBegin()
+    ri.Rotate(160,0,1,0)
     # Instantiate some patterns from compiled shaders
     ri.Pattern('oak', 'oakShader')
     ri.Pattern('oiledWood', 'woodShader')
@@ -109,7 +110,7 @@ def main():
     # Set up image writing
     output_options(ri, filename=filename, res=(640, 480, 1))
     # Camera settings
-    camera_settings(ri, fov=50, maxsamples=512, pathlen=2, pixelvariance=0.2, pos=(0, 0, 10))
+    camera_settings(ri, fov=30, maxsamples=512, pathlen=2, pixelvariance=0.2, pos=(0, 0, 15))
 
     # Start of the scene
     ri.WorldBegin()

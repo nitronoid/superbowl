@@ -3,11 +3,11 @@ version 3.04
 Option "searchpath" "archive" ["./models"] "texture" ["./textures"] "shader" ["./shaders"]
 Display "scene" "it" "rgba" 
 Format 640 480 1
-Projection "perspective" "fov" [50]
+Projection "perspective" "fov" [30]
 Hider "raytrace" "int maxsamples" [512]
 Integrator "PxrPathTracer" "pt" "int maxPathLength" [2]
 PixelVariance 0.2
-Translate 0 0 10
+Translate 0 0 15
 WorldBegin 
 	AttributeBegin 
 		Rotate -35 0 1 0
@@ -22,6 +22,7 @@ WorldBegin
 		Light "PxrDomeLight" "domeLight" "intensity" [0.5] "string lightColorMap" ["room_hdri.tx"]
 	AttributeEnd 
 	AttributeBegin 
+		Rotate 160 0 1 0
 		Pattern "oak" "oakShader" 
 		Pattern "oiledWood" "woodShader" 
 		Pattern "woodOwl" "owl" "float expo" [3] "float thickness" [0.03] "float gap" [0.2] "float warp" [1] "float scale" [1.65] "float fuzz" [0.02] "point translate" [-0.15 -0.1 0]

@@ -68,7 +68,7 @@ shader woodOwl(
 )
 {
     // Transform the point to shader space so it sticks to the object
-    point eyeTransform = transform("shader", P);
+    point eyeTransform = transform("object", P);
 
     // Add some noise based on P, and scale in x
     eyeTransform += noise("perlin", eyeTransform/2)/20;
@@ -79,5 +79,8 @@ shader woodOwl(
 
     // Outputs
     resultF = eyezone(eyeTransform, fuzz, gap, thickness + noise("perlin", eyeTransform/2)/20, warp, expo);
+    normal nm = transform("object", N);
+   // resultF *= smoothstep(1, 0, nm[2] < 0);
+    if(nm[2] < 0) resultF = 0;
     resultRGB = mix(color(0,0,0), color(1,1,1), resultF);
 }
