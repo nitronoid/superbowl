@@ -1,6 +1,7 @@
 import maya.OpenMaya as OpenMaya
  
 def convertMeshToRib(  ):
+    
     # get the active selection
     selection = OpenMaya.MSelectionList()
     OpenMaya.MGlobal.getActiveSelectionList(selection)

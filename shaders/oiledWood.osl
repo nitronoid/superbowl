@@ -1,21 +1,29 @@
+
+float chips(point pos)
+{
+    float ret = 0;
+    float freq = 1;
+    for(int i = 0; i < 6; ++i)
+	{
+        ret += abs((float)noise("perlin",pos*freq))/freq;
+        freq*=2.1;
+	}
+    float slice = 0.8;
+    float fuzz = 0.1;
+    return smoothstep(slice, slice + fuzz, ret);
+}
+
+
 shader oiledWood(
-    output float resultF   = 1,
+    output float resultF   = 0,
     output color resultRGB = 0
 )
 {
 
     // Transform the point to object space so it sticks to the object
     point shaderP = transform("object", P);
-    float freq = 1;
-    resultF=0;
-    for(int i = 0; i < 12; ++i)
-	{
-        resultF += abs((float)noise("perlin",shaderP*freq))/freq;
-        freq*=2.1;
-	}
+    float chipsMask = chips(shaderP);
     // Outputs
-    float slice = 0.8;
-    float fuzz = 0.1;
-    resultF = smoothstep(slice, slice + fuzz, resultF);
+    resultF = chipsMask;
     resultRGB = mix(color(0,0,0), color(1,1,1), resultF);
 }
