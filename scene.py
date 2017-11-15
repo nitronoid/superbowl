@@ -110,7 +110,7 @@ def main():
     # Set up image writing
     output_options(ri, filename=filename, res=(640, 480, 1))
     # Camera settings
-    camera_settings(ri, fov=30, maxsamples=512, pathlen=2, pixelvariance=0.2, pos=(0, 0, 15))
+    camera_settings(ri, fov=30, maxsamples=512, pathlen=2, pixelvariance=0.2, pos=(0, 0, 17))
 
     # Start of the scene
     ri.WorldBegin()

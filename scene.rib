@@ -7,7 +7,7 @@ Projection "perspective" "fov" [30]
 Hider "raytrace" "int maxsamples" [512]
 Integrator "PxrPathTracer" "pt" "int maxPathLength" [2]
 PixelVariance 0.2
-Translate 0 0 15
+Translate 0 0 17
 WorldBegin 
 	AttributeBegin 
 		Rotate -35 0 1 0
