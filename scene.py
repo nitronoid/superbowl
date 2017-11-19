@@ -65,7 +65,7 @@ def geometry(ri):
 
     # The owl
     ri.AttributeBegin()
-    ri.Rotate(155,0,1,0)
+    ri.Rotate(155, 0, 1, 0)
     # Instantiate some patterns from compiled shaders
     ri.Pattern('oak', 'oakShader')
     ri.Pattern('oiledWood', 'woodShader')
