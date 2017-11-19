@@ -1,30 +1,41 @@
 
-float chips(point pos)
+float turb (point _pos, float _frequency)
 {
+    point pos = _pos;
     float ret = 0;
-    float freq = 2;
+    float frequency = _frequency;
     for(int i = 0; i < 8; ++i)
 	{
-        ret += abs((float)noise("perlin",pos*freq))/freq;
-        freq*=2.1;
-	}
-    float slice = 0.4;
-    float fuzz = 0.1;
-    return smoothstep(slice, slice + fuzz, ret);
-}
-
-float brushed(point pos)
-{
-    float ret = 0;
-    float freq = 0.5;
-    pos += (vector)noise("perlin",pos*freq)/freq;
-    pos[0] *= 20;
-    for(int i = 0; i < 8; ++i)
-	{
-        ret += abs((float)noise("perlin",pos*freq))/freq;
-        freq*=2.1;
+        ret += abs((float)noise("perlin",pos*frequency))/frequency;
+        frequency*=2.1;
 	}
     return ret;
+}
+
+float slicednoise (point pos, float frequency, float fuzz, float slice)
+{
+    return smoothstep(slice, slice + fuzz, turb(pos, frequency));
+}
+
+float brushed (point _pos)
+{
+    point pos = _pos;
+    float freq = 0.25;
+    pos += (vector)noise("perlin",pos*freq)/freq;
+    pos[0] *= 20;
+    return turb(pos, freq*2);
+}
+
+float dots(point _pos)
+{
+    point pos = _pos;
+    return 1 - slicednoise(pos, 4, 0.01, 0.02);
+}
+
+float veins(point _pos)
+{
+    point pos = _pos;
+    return 1 - slicednoise(pos, 4, 0.05, 0.01);
 }
 
 shader oiledWood(
@@ -32,12 +43,15 @@ shader oiledWood(
     output color resultRGB = 0
 )
 {
-
     // Transform the point to object space so it sticks to the object
     point shaderP = transform("object", P);
-    float chipsMask = chips(shaderP);
-    float brushedMask = brushed(shaderP);
+
+    // Detail layers
+    // Chips should have low spec
+    float chipsMask = slicednoise(shaderP, 2.0, 0.1, 0.4);
+    float brushedMask = brushed(shaderP) * slicednoise(shaderP, 0.5, 5, 0.2) * 0.5;
+    float veinMask = veins(shaderP) * slicednoise(shaderP, 1, 1, 0.35);
     // Outputs
-    resultF = brushedMask;
+    resultF = brushedMask + veinMask + chipsMask;
     resultRGB = mix(color(0,0,0), color(1,1,1), resultF);
 }

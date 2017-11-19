@@ -22,7 +22,7 @@ WorldBegin
 		Light "PxrDomeLight" "domeLight" "intensity" [0.5] "string lightColorMap" ["room_hdri.tx"]
 	AttributeEnd 
 	AttributeBegin 
-		Rotate 160 0 1 0
+		Rotate 155 0 1 0
 		Pattern "oak" "oakShader" 
 		Pattern "oiledWood" "woodShader" 
 		Pattern "woodOwl" "owl" "float expo" [3] "float thickness" [0.03] "float gap" [0.2] "float warp" [1] "float scale" [1.65] "float fuzz" [0.02] "point translate" [-0.15 -0.1 0]
