@@ -17,13 +17,12 @@ float slicednoise (point pos, float frequency, float fuzz, float slice)
     return smoothstep(slice, slice + fuzz, turb(pos, frequency));
 }
 
-float brushed (point _pos)
+float brushed (point _pos, float frequency, point stretch)
 {
     point pos = _pos;
-    float freq = 0.25;
-    pos += (vector)noise("perlin",pos*freq)/freq;
-    pos[0] *= 20;
-    return turb(pos, freq*2);
+    pos += (vector)noise("perlin",pos*frequency)/frequency;
+    pos *= stretch;
+    return turb(pos, frequency*2);
 }
 
 float dots(point _pos)
@@ -48,13 +47,23 @@ shader oiledWood(
     point shaderP = transform("object", P);
 
     // Detail layers
-    // Chips should have low spec
-    float roughCracks = veins(shaderP, 6, 10) * slicednoise(shaderP, 0.3, 3, 1.1);
-    float chipsMask = slicednoise(shaderP, 2.0, 0.1, 0.4);
-    float brushedMask = brushed(shaderP) * slicednoise(shaderP, 0.5, 5, 0.2) * 0.5;
-    float veinMask = veins(shaderP, 4, 2) * slicednoise(shaderP, 1, 1.25, 0.15);
+    float layers[6] = {
+        turb(shaderP, 4) * clamp(1.0, 0.0, (float)noise("perlin",shaderP)/2),
+        // rough wood
+        veins(shaderP, 6, 10) * slicednoise(shaderP, 0.3, 3, 1.1),
+        // wood chips
+        slicednoise(shaderP, 2.0, 0.1, 0.4),
+        // light brushed
+        brushed(shaderP, 0.25, point(20,1,1)) * slicednoise(shaderP, 0.5, 5, 0.2) * 0.5,
+        // dark brushed
+        brushed(shaderP, 0.5, point(5,25,1)) * slicednoise(shaderP, 0.6, 3, 0.5),
+        // veins
+        veins(shaderP, 4, 2) * slicednoise(shaderP, 1, 1.25, 0.15) 
+    };
+
     // Outputs
-    resultF = brushedMask + veinMask + chipsMask + roughCracks;
-    //resultF = roughCracks;
+    // sum all the layers
+    for(int i = 0; i < arraylength(layers); ++i) resultF += layers[i];
     resultRGB = mix(color(0,0,0), color(1,1,1), resultF);
+    //resultRGB = mix(color(0.03,0.0035,0.002), color(0.84,0.75,0.453), resultF);
 }
