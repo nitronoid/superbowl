@@ -38,6 +38,16 @@ float veins(point _pos, float frequency, float stretch)
     return 1 - slicednoise(pos, frequency, 0.05, 0.01);
 }
 
+point randPos(point _pos, int rand, float scale)
+{
+    return _pos + (vector)noise("perlin", _pos + rand) * scale;
+}
+
+float blendNoise(point pos, float freq)
+{
+    return clamp(1.0, 0.0, (float)noise("perlin",randPos(pos,0,1) * freq)/freq);
+}
+
 shader oiledWood(
     output float resultF   = 0,
     output color resultRGB = 0
@@ -47,23 +57,41 @@ shader oiledWood(
     point shaderP = transform("object", P);
 
     // Detail layers
-    float layers[6] = {
-        turb(shaderP, 4) * clamp(1.0, 0.0, (float)noise("perlin",shaderP)/2),
-        // rough wood
-        veins(shaderP, 6, 10) * slicednoise(shaderP, 0.3, 3, 1.1),
-        // wood chips
-        slicednoise(shaderP, 2.0, 0.1, 0.4),
+    float layers[7] = {
+        // large darkening noise
+        turb(shaderP, 4) * blendNoise(randPos(shaderP, 2, 3), 0.05) * 10,
+        // small variance
+        turb(shaderP, 4) * blendNoise(shaderP, 2) * 20,
         // light brushed
-        brushed(shaderP, 0.25, point(20,1,1)) * slicednoise(shaderP, 0.5, 5, 0.2) * 0.5,
+        brushed(shaderP, 0.25, point(20,1,1)) * slicednoise(randPos(shaderP, 2, 1), 0.5, 5, 0.2),
         // dark brushed
-        brushed(shaderP, 0.5, point(5,25,1)) * slicednoise(shaderP, 0.6, 3, 0.5),
+        brushed(shaderP, 0.5, point(5,25,1)) * slicednoise(randPos(shaderP, 3, 1), 0.6, 3, 0.5),
+        // rough wood
+        veins(shaderP, 6, 10) * slicednoise(randPos(shaderP, 1, 1), 0.3, 3, 1.1),
         // veins
-        veins(shaderP, 4, 2) * slicednoise(shaderP, 1, 1.25, 0.15) 
+        veins(shaderP, 4, 2) * slicednoise(randPos(shaderP, 4, 1), 1, 1.25, 0.15) * 2,
+        // wood chips
+        slicednoise(shaderP, 2.0, 0.1, 0.4)
+    };
+
+    color cols[7] = {
+        color(0.026, 0.001, 0.0),
+        color(0.026, 0.001, 0.0),
+        color(0.913, 0.408, 0.168),
+        color(0.607, 0.380, 0.231),
+        color(0.850, 0.486, 0.149),
+        color(0.843, 0.486, 0.176),
+        color(1, 0.647, 0.321)
     };
 
     // Outputs
-    // sum all the layers
-    for(int i = 0; i < arraylength(layers); ++i) resultF += layers[i];
-    resultRGB = mix(color(0,0,0), color(1,1,1), resultF);
+    resultRGB = color(0.056, 0.011, 0.005);
+    for(int i = 0; i < arraylength(layers); ++i) 
+    {
+        resultF += layers[i];
+        resultRGB = mix(resultRGB, cols[i], layers[i]);
+    }
+
+    //resultRGB = mix(color(0,0,0), color(1,1,1), resultF);
     //resultRGB = mix(color(0.03,0.0035,0.002), color(0.84,0.75,0.453), resultF);
 }
