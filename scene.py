@@ -65,24 +65,27 @@ def geometry(ri):
 
     # The owl
     ri.AttributeBegin()
-    ri.Rotate(155, 0, 1, 0)
+    ri.Rotate(160, 0, 1, 0)
     # Instantiate some patterns from compiled shaders
-    ri.Pattern('oak', 'oakShader')
-    ri.Pattern('oiledWood', 'woodShader')
-    ri.Pattern('woodOwl', 'owl', {'float scale': [1.65], 
-                                  'point translate': [-0.15, -0.1, 0],
-                                  'float warp': [1],
-                                  'float expo': [3],
-                                  'float thickness': [0.03],
-                                  'float gap': [0.2],
-                                  'float fuzz': [0.02]
-                                  })
+    ri.Pattern('oiledWood', 'woodShader',{'float scale': [1.65], 
+                                         'point translate': [-0.15, -0.1, 0],
+                                         'float warp': [1],
+                                         'float expo': [3],
+                                         'float thickness': [0.03],
+                                         'float gap': [0.2],
+                                         'float fuzz': [0.02]
+                                         })
     # Apply displacement to the owl within 0.2 radius, lower this for faster renders
     ri.Attribute('displacementbound', {'float sphere': [0.2]})
     # Use the displace node with our pattern variables plugged in
-    ri.Displace('PxrDisplace', 'displace', {'float dispAmount': [-0.1], 'reference float dispScalar': ['owl:resultF']})
+    ri.Displace('PxrDisplace', 'displace', {'float dispAmount': [-0.1], 'reference float dispScalar': ['woodShader:disp']})
     # Use the PxrDisney for main qualities such as diffuse and spec
-    ri.Bxdf('PxrDisney', 'testShad', {'reference color baseColor': ['woodShader:resultRGB']})
+    ri.Bxdf('PxrDisney', 'testShad', {'reference color baseColor': ['woodShader:resultRGB'], 
+                                      'float clearcoat' : [1],
+                                      'float clearcoatGloss' : [0.4],
+                                      'reference float specular' : ['woodShader:spec'],
+                                      'reference float roughness' : ['woodShader:rough']
+                                      })
     # Read in the model
     ri.ReadArchive('owl.rib')
     ri.AttributeEnd()

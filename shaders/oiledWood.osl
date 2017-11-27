@@ -1,4 +1,81 @@
 
+// Returns x squared
+float sqr(float x)
+{
+    return x * x;
+}
+
+// Returns the sign of x
+int signum(float x)
+{
+    return (0.0 < x) - (x < 0.0);
+}
+
+// Linear interpolation at between x and y, at t
+float lerp(float x, float y, float t) 
+{
+  return (1 - t) * x + t * y;
+}
+
+// Combines two smooth steps to create a smooth bump, 0 -> 1 -> 0
+float smoothpulse (float e0, float e1, float e2, float e3, float x)
+{
+    return smoothstep(e0,e1,x) - smoothstep(e2,e3,x);
+}
+
+// Creates an infinite trail of smooth bumps
+float smoothpulsetrain (float e0, float e1, float e2, float e3, float period, float x)
+{
+    return smoothpulse(e0, e1, e2, e3, mod(x,period));
+}
+
+// Wrapper for smoothpulsetrain that assumes the smoothpulse is uniform
+float smoothpulsetraineven (float e0, float e1, float fuzz, float period, float x)
+{
+    return smoothpulsetrain(e0-fuzz, e0, e1, e1+fuzz, period,x);
+}
+
+float eyezone (point pos, float fuzz, float gap, float thickness, float warp, float expo)
+{
+    float recipExpo = 1.0/expo;
+    // calculate the current radius
+    float r = hypot(pos[0],pos[1]);
+    // calculate the sum of the normalised x and y
+    float sum = (pos[0] + pos[1]) / r;
+    // calculate the period of the pulse train based on our sum and exp
+    float period = gap * lerp(1, pow(sum,recipExpo), warp);
+    float elipses = 1 - smoothpulsetraineven(thickness, thickness + period, fuzz, period, pow(r,recipExpo));
+    float mask = 1 - smoothstep(1,1,hypot(pos[0]-(0.7),pos[1]-(0.7)));
+    return mask * clamp(elipses,0,1);
+}
+
+float eyes (point _pos, normal norm, float scale, point translate, float fuzz, float gap, float thickness, float warp, float expo)
+{
+    point posA = _pos;
+    point posB = _pos;
+    // Add some noise based on P, and scale in x
+    posA += noise("perlin", posA)/15;
+    posB += noise("perlin", posA)/15;
+    posA[1] *= 1.15;
+    posB *= point(-1, 1.15, 1);
+    
+    // Position the eye
+    posA = posA/scale - translate;
+    posB = posB/scale - translate;
+
+    float eyes = eyezone(posA, fuzz, gap, thickness + noise("perlin", posA/2)/20, warp, expo)
+               + eyezone(posB, fuzz, gap, thickness + noise("perlin", posB/2)/20, warp, expo);
+    if(norm[2] < 0) eyes = 0;
+
+    return eyes;
+}
+
+// 
+float posnoise(point x)
+{
+    return noise("perlin", x/2)/20;
+}
+
 float turb (point _pos, float _frequency)
 {
     point pos = _pos;
@@ -49,6 +126,16 @@ float blendNoise(point pos, float freq)
 }
 
 shader oiledWood(
+    float scale            = 1,
+    point translate        = point(1,1,0),
+    float warp             = 0,
+    float expo             = 1,
+    float thickness        = 0.1,
+    float gap              = thickness * 2,
+    float fuzz             = thickness / 2,
+    output float rough     = 0,
+    output float spec      = 0,
+    output float disp      = 0,
     output float resultF   = 0,
     output color resultRGB = 0
 )
@@ -91,7 +178,14 @@ shader oiledWood(
         resultF += layers[i];
         resultRGB = mix(resultRGB, cols[i], layers[i]);
     }
+    spec = 0.9 + (float)noise("perlin", shaderP * 5)/5;
 
+    // Outputs
+    disp = eyes(shaderP, transform("object", N), scale, point(0.21,0,0), fuzz, gap, thickness, warp, expo);
+
+    disp += (resultF/20);
+    rough = slicednoise(randPos(shaderP, 2, 1), 0.5, 5, 0.2)*5;
+    //resultRGB = spec;
     //resultRGB = mix(color(0,0,0), color(1,1,1), resultF);
     //resultRGB = mix(color(0.03,0.0035,0.002), color(0.84,0.75,0.453), resultF);
 }
