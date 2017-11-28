@@ -178,7 +178,7 @@ shader oiledWood(
         resultF += layers[i];
         resultRGB = mix(resultRGB, cols[i], layers[i]);
     }
-    spec = 0.9 + (float)noise("perlin", shaderP * 5)/5;
+    spec = 0.5 + (float)noise("perlin", shaderP * 5)/5;
 
     // Outputs
     disp = eyes(shaderP, transform("object", N), scale, point(0.21,0,0), fuzz, gap, thickness, warp, expo);

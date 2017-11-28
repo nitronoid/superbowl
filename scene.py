@@ -82,7 +82,7 @@ def geometry(ri):
     # Use the PxrDisney for main qualities such as diffuse and spec
     ri.Bxdf('PxrDisney', 'testShad', {'reference color baseColor': ['woodShader:resultRGB'], 
                                       'float clearcoat' : [1],
-                                      'float clearcoatGloss' : [0.4],
+                                      'float clearcoatGloss' : [0],
                                       'reference float specular' : ['woodShader:spec'],
                                       'reference float roughness' : ['woodShader:rough']
                                       })
