@@ -162,30 +162,30 @@ shader oiledWood(
     };
 
     color cols[7] = {
-        color(0.026, 0.001, 0.0),
-        color(0.026, 0.001, 0.0),
+        color(0.03, 0.001, 0.0),
+        color(0.05, 0.002, 0.0),
         color(0.913, 0.408, 0.168),
-        color(0.607, 0.380, 0.231),
-        color(0.850, 0.486, 0.149),
+        color(0.907, 0.380, 0.231),
+        color(0.950, 0.486, 0.149),
         color(0.843, 0.486, 0.176),
         color(1, 0.647, 0.321)
     };
 
     // Outputs
-    resultRGB = color(0.056, 0.011, 0.005);
+    resultRGB = color(0.066, 0.011, 0.005);
     for(int i = 0; i < arraylength(layers); ++i) 
     {
         resultF += layers[i];
         resultRGB = mix(resultRGB, cols[i], layers[i]);
     }
-    spec = 0.5 + (float)noise("perlin", shaderP * 5)/5;
+    spec = 0.6 + (float)noise("perlin", shaderP * 5)/5;
 
     // Outputs
     disp = eyes(shaderP, transform("object", N), scale, point(0.21,0,0), fuzz, gap, thickness, warp, expo);
 
     disp += (resultF/20);
-    rough = slicednoise(randPos(shaderP, 2, 1), 0.5, 5, 0.2)*5;
-    //resultRGB = spec;
+    rough =0.2+slicednoise(randPos(shaderP, 2, 1), 0.5, 5, 0.2)*2;
+    //resultRGB = rough;
     //resultRGB = mix(color(0,0,0), color(1,1,1), resultF);
     //resultRGB = mix(color(0.03,0.0035,0.002), color(0.84,0.75,0.453), resultF);
 }

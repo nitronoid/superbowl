@@ -39,9 +39,13 @@ def lighting(ri, env_strength, tri_strength):
     # Basic 3 point lighting
     ri.AttributeBegin()
     ri.Rotate(-35, 0, 1, 0)
-    ri.Light('PxrDistantLight', 'keyLight', {'intensity': [0.8 * tri_strength],
+    ri.Light('PxrDistantLight', 'keyLight', {'intensity': [0.5 * tri_strength],
                                              'float exposure': [-1],
                                              'float angleExtent': [100]
+                                             })
+    ri.Light('PxrDistantLight', 'highLight', {'intensity': [0.8 * tri_strength],
+                                             'float exposure': [-1],
+                                             'float angleExtent': [50]
                                              })
     ri.Rotate(180, 0, 1, 0)
     ri.Light('PxrDistantLight', 'rimLight', {'intensity': [0.4 * tri_strength],
@@ -56,8 +60,9 @@ def lighting(ri, env_strength, tri_strength):
     ri.AttributeEnd()
     # Create and position our environment dome light
     ri.AttributeBegin()
-    ri.Rotate(80, 0, 0, 1)
-    ri.Light('PxrDomeLight', 'domeLight', {'intensity': [env_strength], 'string lightColorMap': ['room_hdri.tx']})
+    ri.Rotate(80, 0, 1, 0)
+    ri.Rotate(-20, 1, 0, 0)
+    ri.Light('PxrDomeLight', 'domeLight', {'intensity': [env_strength], 'string lightColorMap': ['woodShop.tx']})
     ri.AttributeEnd()
 
 
@@ -65,7 +70,7 @@ def geometry(ri):
 
     # The owl
     ri.AttributeBegin()
-    ri.Rotate(160, 0, 1, 0)
+    ri.Rotate(180, 0, 1, 0)
     # Instantiate some patterns from compiled shaders
     ri.Pattern('oiledWood', 'woodShader',{'float scale': [1.65], 
                                          'point translate': [-0.15, -0.1, 0],
@@ -82,7 +87,7 @@ def geometry(ri):
     # Use the PxrDisney for main qualities such as diffuse and spec
     ri.Bxdf('PxrDisney', 'testShad', {'reference color baseColor': ['woodShader:resultRGB'], 
                                       'float clearcoat' : [1],
-                                      'float clearcoatGloss' : [0],
+                                      'float clearcoatGloss' : [0.5],
                                       'reference float specular' : ['woodShader:spec'],
                                       'reference float roughness' : ['woodShader:rough']
                                       })
@@ -113,13 +118,13 @@ def main():
     # Set up image writing
     output_options(ri, filename=filename, res=(640, 480, 1))
     # Camera settings
-    camera_settings(ri, fov=30, maxsamples=512, pathlen=2, pixelvariance=0.2, pos=(0, 0, 17))
+    camera_settings(ri, fov=30, maxsamples=1024, pathlen=2, pixelvariance=0.2, pos=(0, 0, 17))
 
     # Start of the scene
     ri.WorldBegin()
 
     # Scene lighting
-    lighting(ri, 0.5, 1)
+    lighting(ri, env_strength=1.5, tri_strength=1)
     # All scene geometry
     geometry(ri)
 
