@@ -43,10 +43,6 @@ def lighting(ri, env_strength, tri_strength):
                                              'float exposure': [-1],
                                              'float angleExtent': [100]
                                              })
-    ri.Light('PxrDistantLight', 'highLight', {'intensity': [0.8 * tri_strength],
-                                             'float exposure': [-1],
-                                             'float angleExtent': [50]
-                                             })
     ri.Rotate(180, 0, 1, 0)
     ri.Light('PxrDistantLight', 'rimLight', {'intensity': [0.4 * tri_strength],
                                              'float exposure': [-1],
@@ -60,8 +56,8 @@ def lighting(ri, env_strength, tri_strength):
     ri.AttributeEnd()
     # Create and position our environment dome light
     ri.AttributeBegin()
-    ri.Rotate(80, 0, 1, 0)
-    ri.Rotate(-20, 1, 0, 0)
+    ri.Rotate(0, 0, 1, 0)
+    ri.Rotate(-120, 1, 0, 0)
     ri.Light('PxrDomeLight', 'domeLight', {'intensity': [env_strength], 'string lightColorMap': ['woodShop.tx']})
     ri.AttributeEnd()
 
@@ -70,7 +66,7 @@ def geometry(ri):
 
     # The owl
     ri.AttributeBegin()
-    ri.Rotate(180, 0, 1, 0)
+    ri.Rotate(200, 0, 1, 0)
     # Instantiate some patterns from compiled shaders
     ri.Pattern('oiledWood', 'woodShader',{'float scale': [1.65], 
                                          'point translate': [-0.15, -0.1, 0],
@@ -87,7 +83,7 @@ def geometry(ri):
     # Use the PxrDisney for main qualities such as diffuse and spec
     ri.Bxdf('PxrDisney', 'testShad', {'reference color baseColor': ['woodShader:resultRGB'], 
                                       'float clearcoat' : [1],
-                                      'float clearcoatGloss' : [0.5],
+                                      'float clearcoatGloss' : [1],
                                       'reference float specular' : ['woodShader:spec'],
                                       'reference float roughness' : ['woodShader:rough']
                                       })
