@@ -20,6 +20,8 @@ def output_options(ri, filename, res):
     ri.Display(filename, 'it', 'rgba')
     # Output resolution
     ri.Format(res[0], res[1], res[2])
+    # Convert from float
+    ri.Quantize('rgba', 255, 0, 255, 0)
 
 
 def camera_settings(ri, fov, maxsamples, pathlen, pixelvariance, pos):
@@ -32,6 +34,7 @@ def camera_settings(ri, fov, maxsamples, pathlen, pixelvariance, pos):
     ri.PixelVariance([pixelvariance])
     # Camera position
     ri.Translate(pos[0], pos[1], pos[2])
+    ri.Exposure(1.0, 2.2)
 
 
 def lighting(ri, env_strength, tri_strength):
@@ -66,7 +69,7 @@ def geometry(ri):
 
     # The owl
     ri.AttributeBegin()
-    ri.Rotate(200, 0, 1, 0)
+    ri.Rotate(180, 0, 1, 0)
     # Instantiate some patterns from compiled shaders
     ri.Pattern('oiledWood', 'woodShader',{'float scale': [1.65], 
                                          'point translate': [-0.15, -0.1, 0],
