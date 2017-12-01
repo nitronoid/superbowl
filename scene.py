@@ -3,6 +3,7 @@
 import prman
 import sys
 import os
+import argparse
 
 
 ''' 
@@ -12,12 +13,15 @@ The most commonly changed settings have been added as params to the functions.
 '''
 
 
-def output_options(ri, filename, res):
-
+def output_options(ri, filename, res, save):
     # Include search directories
     ri.Option('searchpath', {'archive': './models', 'shader': './shaders', 'texture': './textures'})
     # Set the display method, I use it to save only when necessary and avoid multiple windows
-    ri.Display(filename, 'it', 'rgba')
+    out = 'it'
+    if save:
+        filename += '.tiff'
+        out = 'file'
+    ri.Display(filename, out, 'rgba')
     # Output resolution
     ri.Format(res[0], res[1], res[2])
     # Convert from float
@@ -25,7 +29,6 @@ def output_options(ri, filename, res):
 
 
 def camera_settings(ri, fov, maxsamples, pathlen, pixelvariance, pos):
-
     # Use perspective projection and set the field of view
     ri.Projection(ri.PERSPECTIVE, {'fov': [fov]})
     ri.Hider('raytrace', {'int maxsamples': [maxsamples]})
@@ -38,7 +41,6 @@ def camera_settings(ri, fov, maxsamples, pathlen, pixelvariance, pos):
 
 
 def lighting(ri, env_strength, tri_strength):
-
     # Basic 3 point lighting
     ri.AttributeBegin()
     ri.Rotate(-35, 0, 1, 0)
@@ -65,20 +67,19 @@ def lighting(ri, env_strength, tri_strength):
     ri.AttributeEnd()
 
 
-def geometry(ri):
-
+def geometry(ri, rotate_x):
     # The owl
     ri.AttributeBegin()
-    ri.Rotate(180, 0, 1, 0)
+    ri.Rotate(rotate_x, 0, 1, 0)
     # Instantiate some patterns from compiled shaders
-    ri.Pattern('oiledWood', 'woodShader',{'float scale': [1.65], 
-                                         'point translate': [-0.15, -0.1, 0],
-                                         'float warp': [1],
-                                         'float expo': [3],
-                                         'float thickness': [0.03],
-                                         'float gap': [0.2],
-                                         'float fuzz': [0.02]
-                                         })
+    ri.Pattern('oiledWood', 'woodShader', {'float scale': [1.65],
+                                           'point translate': [-0.15, -0.1, 0],
+                                           'float warp': [1],
+                                           'float expo': [3],
+                                           'float thickness': [0.03],
+                                           'float gap': [0.2],
+                                           'float fuzz': [0.02]
+                                           })
     # Apply displacement to the owl within 0.2 radius, lower this for faster renders
     ri.Attribute('displacementbound', {'float sphere': [0.2]})
     # Use the displace node with our pattern variables plugged in
@@ -101,21 +102,19 @@ def geometry(ri):
     ri.AttributeEnd()
 
 
-def main():
-
-    filename = 'scene'
-
+def main(name, rx, save):
     # Instance of Renderman Interface
     ri = prman.Ri()
 
     # Make sure the output RIB file is indented for clarity
     ri.Option("rib", {"string asciistyle": "indented"})
 
-    # Begin the RIB file
-    ri.Begin(filename+'.rib')
+    # Begin the render
+    ri.Begin('__render')
 
     # Set up image writing
-    output_options(ri, filename=filename, res=(640, 480, 1))
+    output_options(ri, filename=name, res=(640, 480, 1), save=save)
+
     # Camera settings
     camera_settings(ri, fov=30, maxsamples=1024, pathlen=2, pixelvariance=0.2, pos=(0, 0, 17))
 
@@ -125,7 +124,7 @@ def main():
     # Scene lighting
     lighting(ri, env_strength=1.5, tri_strength=1)
     # All scene geometry
-    geometry(ri)
+    geometry(ri, rotate_x=rx)
 
     # End of scene and RIB file
     ri.WorldEnd()
@@ -135,5 +134,9 @@ def main():
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-rx', '--rotationx', type=float, default=160,
+                        help='The rotation in the x axis applied to the model')
+    args = parser.parse_args()
 
-    sys.exit(main())
+    sys.exit(main('scene', args.rotationx, False))
