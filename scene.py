@@ -3,7 +3,9 @@
 import prman
 import sys
 import os
+import glob
 import argparse
+import subprocess
 
 
 ''' 
@@ -102,7 +104,7 @@ def geometry(ri, rotate_x):
     ri.AttributeEnd()
 
 
-def main(name, rx, save):
+def scene(name, rx, save):
     # Instance of Renderman Interface
     ri = prman.Ri()
 
@@ -133,10 +135,18 @@ def main(name, rx, save):
     return os.EX_OK
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-rx', '--rotationx', type=float, default=160,
                         help='The rotation in the x axis applied to the model')
     args = parser.parse_args()
 
-    sys.exit(main('scene', args.rotationx, False))
+    for f in glob.iglob('shaders/*.osl'):
+        print('Compiling shader: ' + f)
+        subprocess.call(["oslc", '-o', f[:-1] + 'o', f])
+
+    scene('scene', args.rotationx, False)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

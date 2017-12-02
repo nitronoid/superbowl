@@ -13,7 +13,7 @@ def turntable(name, step):
     frame = 0
     for r in range(0, 360, step):
         frame_name = name + str(frame).zfill(4)
-        scene.main(frame_name, r, True)
+        scene.scene(frame_name, r, True)
         print('Finished frame ' + str(frame))
         frame += 1
 
