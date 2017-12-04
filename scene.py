@@ -6,6 +6,7 @@ import os
 import glob
 import argparse
 import subprocess
+import math
 
 
 ''' 
@@ -30,7 +31,7 @@ def output_options(ri, filename, res, save):
     ri.Quantize('rgba', 255, 0, 255, 0)
 
 
-def camera_settings(ri, fov, maxsamples, pathlen, pixelvariance, pos):
+def camera_settings(ri, fov, maxsamples, pathlen, pixelvariance, pos, rot):
     # Use perspective projection and set the field of view
     ri.Projection(ri.PERSPECTIVE, {'fov': [fov]})
     ri.Hider('raytrace', {'int maxsamples': [maxsamples]})
@@ -39,31 +40,17 @@ def camera_settings(ri, fov, maxsamples, pathlen, pixelvariance, pos):
     ri.PixelVariance([pixelvariance])
     # Camera position
     ri.Translate(pos[0], pos[1], pos[2])
+    rotation = math.sqrt(sum([x*x for x in rot]))
+    if rotation != 0.0:
+        vec = [x / rotation for x in rot]
+        ri.Rotate(rotation, vec[0], vec[1], vec[2])
     ri.Exposure(1.0, 2.2)
 
 
-def lighting(ri, env_strength, tri_strength):
-    # Basic 3 point lighting
-    ri.AttributeBegin()
-    ri.Rotate(-35, 0, 1, 0)
-    ri.Light('PxrDistantLight', 'keyLight', {'intensity': [0.5 * tri_strength],
-                                             'float exposure': [-1],
-                                             'float angleExtent': [100]
-                                             })
-    ri.Rotate(180, 0, 1, 0)
-    ri.Light('PxrDistantLight', 'rimLight', {'intensity': [0.4 * tri_strength],
-                                             'float exposure': [-1],
-                                             'float angleExtent': [100]
-                                             })
-    ri.Rotate(-95, 0, 1, 0)
-    ri.Light('PxrDistantLight', 'fillLight', {'intensity': [0.05 * tri_strength],
-                                              'float exposure': [-1],
-                                              'float angleExtent': [100]
-                                              })
-    ri.AttributeEnd()
+def lighting(ri, env_strength, rx):
     # Create and position our environment dome light
     ri.AttributeBegin()
-    ri.Rotate(0, 0, 1, 0)
+    ri.Rotate(rx, 0, 1, 0)
     ri.Rotate(-120, 1, 0, 0)
     ri.Light('PxrDomeLight', 'domeLight', {'intensity': [env_strength], 'string lightColorMap': ['woodShop.tx']})
     ri.AttributeEnd()
@@ -78,7 +65,7 @@ def geometry(ri, rotate_x):
                                            'point translate': [-0.15, -0.1, 0],
                                            'float warp': [1],
                                            'float expo': [3],
-                                           'float thickness': [0.03],
+                                           'float thickness': [0.04],
                                            'float gap': [0.2],
                                            'float fuzz': [0.02]
                                            })
@@ -90,8 +77,8 @@ def geometry(ri, rotate_x):
     ri.Bxdf('PxrDisney', 'testShad', {'reference color baseColor': ['woodShader:resultRGB'], 
                                       'float clearcoat' : [1],
                                       'float clearcoatGloss' : [1],
-                                      'reference float specular' : ['woodShader:spec'],
-                                      'reference float roughness' : ['woodShader:rough']
+                                      'reference float specular': ['woodShader:spec'],
+                                      'reference float roughness': ['woodShader:rough']
                                       })
     # Read in the model
     ri.ReadArchive('owl.rib')
@@ -99,12 +86,16 @@ def geometry(ri, rotate_x):
 
     # Draw a floor plane
     ri.AttributeBegin()
-    ri.Bxdf('PxrDisney', 'testShad', {'color baseColor': [0.0, 0.7, 0.6]})
-    ri.Patch('bilinear', {'P': [10, -3.15, 10, 10, -3.15, -10, -10, -3.15, 10, -10, -3.15, -10]})
+    ri.Bxdf('PxrDisney', 'testShad', {'color baseColor': [0.9, 0.9, 0.9],
+                                      'float specular': [0.8],
+                                      'float roughness': [0.5]
+                                      })
+    ri.Scale(5, 1, 5)
+    #ri.Patch('bilinear', {'P': [10, -3.15, 10, 10, -3.15, -10, -10, -3.15, 10, -10, -3.15, -10]})
     ri.AttributeEnd()
 
 
-def scene(name, rx, save):
+def scene(name, rx, ex, save):
     # Instance of Renderman Interface
     ri = prman.Ri()
 
@@ -118,13 +109,20 @@ def scene(name, rx, save):
     output_options(ri, filename=name, res=(640, 480, 1), save=save)
 
     # Camera settings
-    camera_settings(ri, fov=30, maxsamples=1024, pathlen=2, pixelvariance=0.2, pos=(0, 0, 17))
+    camera_settings(ri,
+                    fov=30,
+                    maxsamples=2048,
+                    pathlen=2,
+                    pixelvariance=0.2,
+                    pos=(0, 0, 17),
+                    rot=(0, 0, 0)
+                    )
 
     # Start of the scene
     ri.WorldBegin()
 
     # Scene lighting
-    lighting(ri, env_strength=1.5, tri_strength=1)
+    lighting(ri, env_strength=5, rx=ex)
     # All scene geometry
     geometry(ri, rotate_x=rx)
 
@@ -139,13 +137,15 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-rx', '--rotationx', type=float, default=160,
                         help='The rotation in the x axis applied to the model')
+    parser.add_argument('-ex', '--environmentx', type=float, default=0,
+                        help='The rotation in the x axis applied to the model')
     args = parser.parse_args()
 
     for f in glob.iglob('shaders/*.osl'):
         print('Compiling shader: ' + f)
         subprocess.call(["oslc", '-o', f[:-1] + 'o', f])
 
-    scene('scene', args.rotationx, False)
+    scene('scene', args.rotationx, args.environmentx, False)
 
 
 if __name__ == "__main__":

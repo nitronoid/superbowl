@@ -56,8 +56,9 @@ float eyes (point _pos, normal norm, float scale, point translate, float fuzz, f
     // Add some noise based on P, and scale in x
     posA += noise("perlin", posA)/15;
     posB += noise("perlin", posA)/15;
-    posA[1] *= 1.15;
-    posB *= point(-1, 1.15, 1);
+    float stretch = 1.35;
+    posA[1] *= stretch;
+    posB *= point(-1, stretch, 1);
     
     // Position the eye
     posA = posA/scale - translate;
@@ -164,30 +165,29 @@ shader oiledWood(
     };
 
     color cols[8] = {
-        color(0.033, 0.01, 0.001),
-        color(0.03, 0.01, 0.0),
-        color(0.05, 0.002, 0.0),
-        color(0.933, 0.458, 0.168),
-        color(0.907, 0.380, 0.231),
-        color(0.960, 0.536, 0.149),
-        color(0.843, 0.486, 0.176),
-        color(1, 0.51, 0.221)
+        color(0.036, 0.008, 0.001),
+        color(0.03, 0.009, 0.0),
+        color(0.08, 0.002, 0.0),
+        color(0.703, 0.188, 0.108),
+        color(0.707, 0.090, 0.021),
+        color(0.960, 0.436, 0.149),
+        color(0.843, 0.326, 0.176),
+        color(1, 0.31, 0.171)
     };
 
-    // Outputs
-    resultRGB = color(0.093, 0.03, 0.003);
+    // Add a base color
+    resultRGB = color(0.093, 0.02, 0.003);
+    // Layer the colors on top of eachother using the float masks
     for(int i = 0; i < arraylength(layers); ++i) 
     {
         resultF += layers[i];
         resultRGB = mix(resultRGB, cols[i], layers[i]);
     }
-    spec = 0.5 + (float)noise("perlin", shaderP * 5)/5;
+    spec = 0.2 + (float)noise("perlin", shaderP * 5)/5;
 
     // Outputs
-    disp = eyes(shaderP, transform("object", N), scale, point(0.21,0,0), fuzz, gap, thickness, warp, expo);
+    disp = eyes(shaderP, transform("object", N), scale, point(0.21,0.2,0), fuzz, gap, thickness, warp, expo);
 
-    disp += (resultF/20);
+    disp += (resultF/25);
     rough = 0.115+slicednoise(randPos(shaderP, 2, 1), 0.5, 5, 0.2)*1.5;
-    //resultRGB = mix(color(0,0,0), color(1,1,1), resultF);
-    //resultRGB = mix(color(0.03,0.0035,0.002), color(0.84,0.75,0.453), resultF);
 }
