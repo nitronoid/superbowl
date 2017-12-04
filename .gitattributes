@@ -1,1 +1,2 @@
 models/owl.ma linguist-generated=true
+shaders/*.osl linguist-language=OSL
