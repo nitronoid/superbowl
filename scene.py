@@ -59,6 +59,7 @@ def lighting(ri, env_strength, rx):
 def geometry(ri, rotate_x):
     # The owl
     ri.AttributeBegin()
+    ri.ShadingRate(0.5)
     ri.Rotate(rotate_x, 0, 1, 0)
     # Instantiate some patterns from compiled shaders
     ri.Pattern('oiledWood', 'woodShader', {'float scale': [1.65],
@@ -86,12 +87,16 @@ def geometry(ri, rotate_x):
 
     # Draw a floor plane
     ri.AttributeBegin()
-    ri.Bxdf('PxrDisney', 'testShad', {'color baseColor': [0.9, 0.9, 0.9],
+    ri.Pattern('tableWood', 'table')
+    ri.Bxdf('PxrDisney', 'testShad', {'reference color baseColor': ['table:resultRGB'],
                                       'float specular': [0.8],
-                                      'float roughness': [0.5]
+                                      'float roughness': [0.6]
                                       })
+    ri.Attribute('displacementbound', {'float sphere': [0.2]})
+    # Use the displace node with our pattern variables plugged in
+    ri.Displace('PxrDisplace', 'displace', {'float dispAmount': [0.1], 'reference vector dispVector': ['table:resultDisp']})
     ri.Scale(5, 1, 5)
-    #ri.Patch('bilinear', {'P': [10, -3.15, 10, 10, -3.15, -10, -10, -3.15, 10, -10, -3.15, -10]})
+    ri.Patch('bilinear', {'P': [10, -3.15, 10, 10, -3.15, -10, -10, -3.15, 10, -10, -3.15, -10]})
     ri.AttributeEnd()
 
 
@@ -113,9 +118,9 @@ def scene(name, rx, ex, save):
                     fov=30,
                     maxsamples=2048,
                     pathlen=2,
-                    pixelvariance=0.2,
+                    pixelvariance=0.01,
                     pos=(0, 0, 17),
-                    rot=(0, 0, 0)
+                    rot=(-10, 5, 0)
                     )
 
     # Start of the scene

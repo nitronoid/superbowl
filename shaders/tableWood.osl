@@ -1,0 +1,11 @@
+
+shader tableWood(
+    output color resultRGB = 0,
+    output vector resultDisp = 0
+)
+{
+    float s = u * 5;
+    float t = v * 5;
+    resultRGB = texture ("Hackberry_pxr128.tx", s, t);
+    resultDisp = texture ("Hackberry_pxr128_bmp.tx", s, t);
+}
