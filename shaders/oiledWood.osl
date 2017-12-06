@@ -49,7 +49,7 @@ float eyezone (point pos, float fuzz, float gap, float thickness, float warp, fl
     return mask * clamp(elipses,0,1);
 }
 
-float eyes (point _pos, normal norm, float scale, point translate, float fuzz, float gap, float thickness, float warp, float expo)
+float eyes (point _pos, normal norm, float scale, point translate, float twist, float fuzz, float gap, float thickness, float warp, float expo)
 {
     point posA = _pos;
     point posB = _pos;
@@ -63,6 +63,9 @@ float eyes (point _pos, normal norm, float scale, point translate, float fuzz, f
     // Position the eye
     posA = posA/scale - translate;
     posB = posB/scale - translate;
+
+    posA = rotate(posA, radians(-twist), point(0, 0, 0), point(0, 0, 1));
+    posB = rotate(posB, radians(twist), point(0, 0, 0), point(0, 0, 1));
 
     float eyes = eyezone(posA, fuzz, gap, thickness + noise("perlin", posA/2)/20, warp, expo)
                + eyezone(posB, fuzz, gap, thickness + noise("perlin", posB/2)/20, warp, expo);
@@ -127,13 +130,14 @@ float blendNoise(point pos, float freq)
 }
 
 shader oiledWood(
-    float scale            = 1,
-    point translate        = point(1,1,0),
-    float warp             = 0,
-    float expo             = 1,
-    float thickness        = 0.1,
-    float gap              = thickness * 2,
-    float fuzz             = thickness / 2,
+    float eyeScale         = 1,
+    point eyeTranslate     = point(1,1,0), //point(0.21,0.3,0)
+    float eyeRotation      = 0, //7
+    float eyeWarp          = 0,
+    float eyeExponent      = 1,
+    float eyeThickness     = 0.1,
+    float eyeGap           = eyeThickness * 2,
+    float eyeFuzz          = eyeThickness / 2,
     output float rough     = 0,
     output float spec      = 0,
     output float disp      = 0,
@@ -183,11 +187,12 @@ shader oiledWood(
         resultF += layers[i];
         resultRGB = mix(resultRGB, cols[i], layers[i]);
     }
-    spec = 0.2 + (float)noise("perlin", shaderP * 5)/5;
+    spec = 0.1 + (float)noise("perlin", shaderP * 5)/5;
 
     // Outputs
-    disp = eyes(shaderP, transform("object", N), scale, point(0.21,0.2,0), fuzz, gap, thickness, warp, expo);
+    disp = eyes(shaderP, transform("object", N), eyeScale, 
+                eyeTranslate, eyeRotation, eyeFuzz, eyeGap, eyeThickness, eyeWarp, eyeExponent);
 
     disp += (resultF/25);
-    rough = 0.115+slicednoise(randPos(shaderP, 2, 1), 0.5, 5, 0.2)*1.5;
+    rough = 0.2+slicednoise(randPos(shaderP, 2, 1), 0.5, 5, 0.2)*1.5;
 }
