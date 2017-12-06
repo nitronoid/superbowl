@@ -63,7 +63,11 @@ def owl(ri, rotate_x):
     ri.ShadingRate(0.5)
     ri.Rotate(rotate_x, 0, 1, 0)
     # Instantiate some patterns from compiled shaders
-    ri.Pattern('oiledWood', 'woodShader', {'float eyeScale': [1.65],
+    ri.Pattern('oiledWood', 'woodShader', {'float rand': [100.0],
+                                           'float surfaceCrinkle': [0.04],
+                                           'float baseRoughness': [0.2],
+                                           'float baseSpec': [0.1],
+                                           'float eyeScale': [1.65],
                                            'point eyeTranslate': [0.21, 0.3, 0],
                                            'float eyeRotation': [7],
                                            'float eyeWarp': [1],
@@ -143,7 +147,7 @@ def scene(name, rx, ex, save):
                     fov=30,
                     maxsamples=2048,
                     pathlen=2,
-                    pixelvariance=0.01,
+                    pixelvariance=0.2,
                     pos=(0, 0, 16),
                     rot=(-7.5, 0, 0)
                     )
@@ -156,7 +160,7 @@ def scene(name, rx, ex, save):
     # Draw the owl
     owl(ri, rotate_x=rx)
     # Draw the environment geometry
-    environment(ri)
+    #environment(ri)
 
     # End of scene and RIB file
     ri.WorldEnd()
