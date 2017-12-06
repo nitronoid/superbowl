@@ -1,0 +1,13 @@
+
+shader tile(
+    float tile = 1,
+    string name = "",
+    output color resultRGB = 0,
+    output vector resultDisp = 0
+)
+{
+    float s = u * tile;
+    float t = v * tile;
+    resultRGB = texture (concat(name, ".tx"), s, t);
+    resultDisp = texture (concat(name, "_bmp.tx"), s, t);
+}
