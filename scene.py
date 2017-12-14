@@ -8,7 +8,6 @@ import argparse
 import subprocess
 import math
 
-
 ''' 
 Functions have been used to group together sections of the rib file.
 This was done mostly to make the layout clearer, rather than for reusing code.
@@ -40,7 +39,7 @@ def camera_settings(ri, fov, maxsamples, pathlen, pixelvariance, pos, rot):
     ri.PixelVariance([pixelvariance])
     # Camera position
     ri.Translate(pos[0], pos[1], pos[2])
-    rotation = math.sqrt(sum([x*x for x in rot]))
+    rotation = math.sqrt(sum([x * x for x in rot]))
     if rotation != 0.0:
         vec = [x / rotation for x in rot]
         ri.Rotate(rotation, vec[0], vec[1], vec[2])
@@ -63,7 +62,7 @@ def owl(ri, rotate_x):
     ri.ShadingRate(0.5)
     ri.Rotate(rotate_x, 0, 1, 0)
     # Instantiate some patterns from compiled shaders
-    ri.Pattern('oiledWood', 'woodShader', {'float rand': [100.0],
+    ri.Pattern('oiledWood', 'woodShader', {'float rand': [0.0],
                                            'float surfaceCrinkle': [0.04],
                                            'float baseRoughness': [0.2],
                                            'float baseSpec': [0.1],
@@ -150,6 +149,7 @@ def scene(name, rx, ex, save):
                     pixelvariance=0.2,
                     pos=(0, 0, 16),
                     rot=(-7.5, 0, 0)
+                    #rot=(-2, 15, 0)
                     )
 
     # Start of the scene
@@ -160,7 +160,7 @@ def scene(name, rx, ex, save):
     # Draw the owl
     owl(ri, rotate_x=rx)
     # Draw the environment geometry
-    #environment(ri)
+    environment(ri)
 
     # End of scene and RIB file
     ri.WorldEnd()

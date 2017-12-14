@@ -1,16 +1,4 @@
 
-// Returns x squared
-float sqr(float x)
-{
-    return x * x;
-}
-
-// Returns the sign of x
-int signum(float x)
-{
-    return (0.0 < x) - (x < 0.0);
-}
-
 // Linear interpolation at between x and y, at t
 float lerp(float x, float y, float t) 
 {
@@ -27,6 +15,7 @@ color colerp(color a, color b, float t)
   return ret;
 }
 
+// adapted from larry gritz advanced renderman patterns.h
 // Combines two smooth steps to create a smooth bump, 0 -> 1 -> 0
 float smoothpulse (float e0, float e1, float e2, float e3, float x)
 {
@@ -56,8 +45,9 @@ float eyezone (point pos, float fuzz, float gap, float thickness, float warp, fl
     float period = gap * lerp(1, pow(sum,recipExpo), warp);
     float elipses = 1 - smoothpulsetraineven(thickness, thickness + period, fuzz, period, pow(r,recipExpo));
     float mask = 1 - smoothstep(1,1,hypot(pos[0]-(0.7),pos[1]-(0.7)));
-    return mask * clamp(elipses,0,1);
+    return  mask * clamp(elipses,0,1);
 }
+
 
 float eyes (point _pos, normal norm, float scale, point translate, float twist, float fuzz, float gap, float thickness, float warp, float expo)
 {
@@ -82,12 +72,6 @@ float eyes (point _pos, normal norm, float scale, point translate, float twist, 
     if(norm[2] < 0) eyes = 0;
 
     return eyes;
-}
-
-// 
-float posnoise(point x)
-{
-    return noise("perlin", x/2)/20;
 }
 
 float turb (point _pos, float _frequency)
@@ -146,12 +130,12 @@ float blendNoise(point pos, float freq)
 
 shader oiledWood(
     float rand             = 0.0,
-    float surfaceCrinkle   = 0.1, //0.04
-    float baseRoughness    = 0.5, //0.2
-    float baseSpec         = 0.5, //0.1
+    float surfaceCrinkle   = 0.1, 
+    float baseRoughness    = 0.5, 
+    float baseSpec         = 0.5, 
     float eyeScale         = 1,
-    point eyeTranslate     = point(1,1,0), //point(0.21,0.3,0)
-    float eyeRotation      = 0, //7
+    point eyeTranslate     = point(1,1,0), 
+    float eyeRotation      = 0, 
     float eyeWarp          = 0,
     float eyeExponent      = 1,
     float eyeThickness     = 0.1,
@@ -172,7 +156,7 @@ shader oiledWood(
         // large darken
         1 - clamp(1.0,0.0,blendNoise(randPos(randP + point(1,0,0), 4, 5), 0.005)),
         // thin darkening noise
-        turb(randP, 4) * blendNoise(randPos(randP, 2, 15), 0.01),
+        turb(randP, 4) * blendNoise(randPos(shaderP, 2, 15), 0.01),
         // small variance
         turb(randP, 4) * blendNoise(randP, 2) * 2,
         // light brushed
