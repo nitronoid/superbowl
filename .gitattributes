@@ -1,2 +1,5 @@
-models/owl.ma linguist-generated=true
-shaders/*.osl linguist-language=OSL
+models/* linguist-generated=true
+finals/* linguist-generated=true
+textures/* linguist-generated=true
+shaders/* linguist-language=OSL
+paper/* linguist-documentation=true

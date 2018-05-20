@@ -185,7 +185,8 @@ shader oiledWood(
     // Add a base color
     resultRGB = color(0.093, 0.02, 0.003);
     // Layer the colors on top of eachother using the float masks
-    for(int i = 0; i < arraylength(layers); ++i) 
+    //for(int i = 0; i < arraylength(layers); ++i)
+    for(int i = 0; i < 1; ++i) 
     {
         resultF += layers[i];
         resultRGB = mix(resultRGB, cols[i], layers[i]);

@@ -32,7 +32,7 @@ def turntable(name, step, env, start_rot):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-s', '--step', type=int, default=30,
+    parser.add_argument('-s', '--step', type=int, default=1,
                         help='The rate of change of rotation per frame')
     parser.add_argument('-e', '--environment', type=bool, default=False,
                         help='Rotate the environment as well as the model')
