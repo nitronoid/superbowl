@@ -139,14 +139,14 @@ def scene(name, rx, ex, save):
     ri.Begin('__render')
 
     # Set up image writing
-    output_options(ri, filename=name, res=(640, 480, 1), save=save)
+    output_options(ri, filename=name, res=(1920, 1080, 1), save=save)
 
     # Camera settings
     camera_settings(ri,
                     fov=30,
-                    maxsamples=256,
-                    pathlen=2,
-                    pixelvariance=0.5,
+                    maxsamples=4096,
+                    pathlen=3,
+                    pixelvariance=0.01,
                     pos=(0, 0, 16),
                     rot=(-7.5, 0, 0)
                     #rot=(-2, 15, 0)
@@ -160,7 +160,7 @@ def scene(name, rx, ex, save):
     # Draw the owl
     owl(ri, rotate_x=rx)
     # Draw the environment geometry
-    #environment(ri)
+    environment(ri)
 
     # End of scene and RIB file
     ri.WorldEnd()
